@@ -1,4 +1,5 @@
 import requests
+from os.path import join
 
 file_type_dict = {
     '1': 'dir_', 
@@ -57,37 +58,38 @@ if __name__ == '__main__':
         if not target.endswith('/'):
             target += '/'
         
-        file_name = ''
-        if get_ans('\n---> Wanna use buitin dictionaries? '):
-            while True:
-                print('\n--> Choose dictionary type? ')
-                print('  1. Only Directory')
-                print('  2. Only Files')
-                print('  3. Only Files (PHP)')
-                print('  4. Directory & Files')
-                ans = input('[>] ')
-                if ans in ['1', '2', '3', '4']:
-                    file_type = ans
-                    break
-            while True:
-                print('\n--> Choose words type? ')
-                print('  1. All')
-                print('  2. Common')
-                print('  3. Crazy')
-                print('  4. Extra')
-                ans = input('[>] ')
-                if ans in ['1', '2', '3', '4']:
-                    word_type = ans
-                    break
-            file_name = file_type_dict[file_type] + word_type_dict[word_type] + '.wordlist'
+        print('\n---> Let\'s use buitin dictionaries! ')
+        while True:
+            print('\n--> Choose dictionary type? ')
+            print('  1. Only Directory')
+            print('  2. Only Files')
+            print('  3. Only Files (PHP)')
+            print('  4. Directory & Files')
+            ans = input('[>] ')
+            if ans in ['1', '2', '3', '4']:
+                file_type = ans
+                break
+        while True:
+            print('\n--> Choose words type? ')
+            print('  1. All')
+            print('  2. Common')
+            print('  3. Crazy')
+            print('  4. Extra')
+            ans = input('[>] ')
+            if ans in ['1', '2', '3', '4']:
+                word_type = ans
+                break
+        file_path = join('wordlist', file_type_dict[file_type] + word_type_dict[word_type] + '.wordlist')
             
         try:
-            fl = open(file_name, 'r')
+            fl = open(file_path, 'r')
         except:
-            print(f'[+] - Failed to open "{file_name}". Make sure that file is in the same directory.\n')
+            print(f'[+] - Failed to open "{file_path}". Make sure that file exists.\n')
             continue
         directory_list = fl.read().strip().splitlines()
         fl.close()
+
+        print('[+] - Searching started ...\n')
 
         for a_item in directory_list:
             a_item = a_item.strip()
@@ -97,7 +99,7 @@ if __name__ == '__main__':
                 if response is None:
                     print('[+] - Got error. So we sttoped.')
                     break
-                else:
+                elif response:
                     print(f'\n[+] - Got at - {link} - [{response}]')
                     count += 1
                     
